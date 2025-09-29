@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Journeyman Exam Prep</string>
+    <string name="title_activity_main">Journeyman Exam Prep</string>
+    <string name="package_name">com.journeyman.exam</string>
+    <string name="custom_url_scheme">com.journeyman.exam</string>
+</resources>
