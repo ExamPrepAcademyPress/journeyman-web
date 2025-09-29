@@ -1,0 +1,44 @@
+# Node/Next
+node_modules/
+.next/
+out/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Lockfile (opzionale, togli se vuoi versionarlo)
+package-lock.json
+
+# Env e segreti
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel
+
+# Android build outputs
+android/.gradle/
+android/.idea/
+android/local.properties
+android/build/
+android/app/build/
+android/captures/
+android/.cxx/
+android/.externalNativeBuild/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Android assets rigenerabili
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+
+# Archive / backup
+*.zip
+*.rar
+*.7z
