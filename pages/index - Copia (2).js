@@ -19,44 +19,46 @@ export default function Home() {
           </nav>
         </header>
 
-        {/* Contenuto principale centrato orizzontalmente */}
-        <section className="content">
-          <div className="left">
-            <h2>Welcome</h2>
-            <p>Use the navigation above to start a practice exam or review flashcards.</p>
-            <div className="cta">
-              <p>If you landed on this page because someone shared the link with you, consider getting your own copy of the book. It’s absolutely essential for anyone who wants to properly prepare and pass the Journeyman Electrician Exam with confidence.</p>
-              <p className="highlight">Click on the book cover to visit Amazon and get your copy now — it’s your key to success!</p>
-            </div>
-          </div>
-
-          <div className="right">
-            <Link
-              className="imageLink"
-              href="https://www.amazon.com/Pink-Salt-Solution-Weight-Loss/dp/B0FFB8L1XS"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div className="imageContainer">
-                <Image
-                  src="/img/COVER_HOME.jpg"
-                  alt="Dominate The Journeyman Electrician Exam"
-                  width={768}
-                  height={1001}
-                />
+        <main className="frame">
+          <section className="content">
+            <div className="left">
+              <h2>Welcome</h2>
+              <p>Use the navigation above to start a practice exam or review flashcards.</p>
+              <div className="cta">
+                <p>If you landed on this page because someone shared the link with you, consider getting your own copy of the book. It’s absolutely essential for anyone who wants to properly prepare and pass the Journeyman Electrician Exam with confidence.</p>
+                <p className="highlight">Click on the book cover to visit Amazon and get your copy now — it’s your key to success!</p>
               </div>
-            </Link>
-          </div>
-        </section>
+            </div>
+
+            <div className="right">
+              <Link
+                className="imageLink"
+                href="https://www.amazon.com/Pink-Salt-Solution-Weight-Loss/dp/B0FFB8L1XS"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="imageContainer">
+                  <Image
+                    src="/img/COVER_HOME.jpg"
+                    alt="Dominate The Journeyman Electrician Exam"
+                    width={768}
+                    height={1001}
+                  />
+                </div>
+              </Link>
+            </div>
+          </section>
+        </main>
       </div>
 
       <style jsx>{`
-        .page { display: flex; flex-direction: column; align-items: center; color: #e6e9ef; }
-        .header { padding: 20px; position: sticky; top: 0; width: 100%; height: 32px; display:flex; align-items:center; backdrop-filter: blur(6px); }
+        .page { display: flex; flex-direction: column; background: #0b0f15; color: #e6e9ef; }
+        .header { position: sticky; top: 0; width: 100%; height: 32px; display:flex; align-items:center; background: rgba(10,10,10,0.9); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(255,255,255,0.08); }
         .nav { margin: 0 auto; display: flex; gap: 24px; align-items: center; justify-content: center; }
         .nav :global(a) { text-decoration: none; font-weight: 600; opacity: 0.85; color: #e6e9ef; padding: 6px 10px; border-radius: 10px; transition: opacity .2s, background .2s, color .2s; }
-        .nav :global(a.active) { opacity: 1; background: rgba(255,255,255,0.25); color: #FFD700; }
-        .content { width: 100%; max-width: 1000px; height: 100%; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; align-items: flex-start; justify-items: center; padding: 20px; border-radius: 20px; background: rgba(255,255,255,0.25); border: 3px solid #FFD700; }
+        .nav :global(a.active) { opacity: 1; background: rgba(255,255,255,0.15); color: #FFD700; }
+        .frame { flex: 1; height: calc(100svh - 64px); display: flex; align-items: center; justify-content: center; }
+        .content { width: 100%; max-width: 1000px; height: 100%; display: grid; grid-template-columns: 1fr 1fr; align-items: center; justify-items: center; padding: 20px; border-radius: 20px; background: rgba(255,255,255,0.25); border: 3px solid #FFD700; }
         .left { text-align: justify; padding-right: 20px; }
         .left h2 { margin: 0 0 10px; font-size: clamp(24px, 2.2vw, 36px); color: #FFD700; }
         .left p { margin: 0; font-size: clamp(14px, 1.0vw, 20px); opacity: 0.9; }

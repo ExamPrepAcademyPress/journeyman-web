@@ -4,7 +4,17 @@
   "webDir": "out",
   "bundledWebRuntime": false,
   "server": {
-    "url": "http://192.168.1.165:3000",
+    "url": "https://192.168.1.165:3000",
     "cleartext": true
+  }
+}
+
+{
+  "appId": "com.examprepacademy.journeyman",
+  "appName": "Journeyman Exam Prep",
+  "webDir": "out",
+  "bundledWebRuntime": false,
+  "android": {
+    "icon": "public/icon-journey.png"
   }
 }

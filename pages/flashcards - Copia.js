@@ -1,7 +1,5 @@
-// Import dei moduli React, funzioni di navigazione Next.js e connessione Supabase
+// /pages/flashcards.js — scroll interno + interlinea ridotta
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
 import { supabase } from '../lib/supabaseClient';
 
 function useKeyboardShortcuts(handlers) {
@@ -30,7 +28,10 @@ function shuffleArray(arr) {
   return a;
 }
 
-const PASTELS = ['#FFD166','#FFADAD','#FDFFB6','#BDE0FE','#A0E7E5','#B9FBC0','#BDB2FF','#FFC6FF','#F4A261','#A7C957'];
+const PASTELS = [
+  '#FFD166','#FFADAD','#FDFFB6','#BDE0FE','#A0E7E5',
+  '#B9FBC0','#BDB2FF','#FFC6FF','#F4A261','#A7C957'
+];
 
 function pickDifferentColor(prev) {
   const pool = PASTELS.filter(c => c !== prev);
@@ -38,19 +39,19 @@ function pickDifferentColor(prev) {
 }
 
 export default function Flashcards() {
-  const pathname = usePathname();
-  const isActive = (path) => (pathname === path ? 'active' : '');
-
   const [all, setAll] = useState([]);
   const [filter, setFilter] = useState('');
   const [onlyFlagged, setOnlyFlagged] = useState(false);
   const [limit, setLimit] = useState(50);
   const [shuffleSeed, setShuffleSeed] = useState(0);
+
   const [idx, setIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [flagged, setFlagged] = useState(new Set());
+
   const [animClass, setAnimClass] = useState('anim-in-right');
   const animTimer = useRef(null);
+
   const [cardColor, setCardColor] = useState(PASTELS[0]);
   const lastColorRef = useRef(null);
 
@@ -129,16 +130,13 @@ export default function Flashcards() {
 
   return (
     <>
-      <header className="header">
-        <nav className="nav">
-          <Link className={isActive('/')} href="/">Home</Link>
-          <Link className={isActive('/exam')} href="/exam">Exam Test</Link>
-          <Link className={isActive('/flashcards')} href="/flashcards">Flashcards</Link>
-        </nav>
+      <header>
+        <a href="/">Home</a>
+        <a href="/exam">Exam</a>
+        <strong>Flashcards</strong>
       </header>
-
       <main>
-        <div className="card" style={{display:'grid', gap:12, margin:'0 auto'}}>
+        <div className="card" style={{display:'grid', gap:12}}>
           <div style={{display:'flex', gap:12, flexWrap:'wrap', alignItems:'center', width:'100%'}}>
             <input
               placeholder="Search front/back..."
@@ -146,18 +144,19 @@ export default function Flashcards() {
               onChange={e=>setFilter(e.target.value)}
               style={{minWidth:260, flex:'1 1 280px'}}
             />
-            <label style={{color:'white'}}>Size
+            <label>Size
               <input type="number" min="1" max="500" value={limit} onChange={e=>setLimit(+e.target.value)} style={{marginLeft:8, width:90}} />
             </label>
-            <label style={{color:'white'}}>
+            <label>
               <input type="checkbox" checked={onlyFlagged} onChange={e=>setOnlyFlagged(e.target.checked)} />
               {' '}Flagged only
             </label>
             <button className="btn secondary" onClick={reshuffle}>Shuffle</button>
-            <span className="badge" style={{color:'white'}}>{progress}</span>
-            <span className="muted small desktop-only">Shortcuts: ←/→, Space=flip, F=flag, R=reshuffle</span>
+            <span className="badge">{progress}</span>
+            <span className="muted small">Shortcuts: ←/→, Space=flip, F=flag, R=reshuffle</span>
           </div>
 
+          {/* stage piena larghezza; la card ha altezza fissa responsive in CSS */}
           <div className="flashcard-stage" style={{ maxWidth:'100%' }}>
             <div className={`color-frame ${animClass}`}>
               <div className="flip-card">
@@ -197,14 +196,6 @@ export default function Flashcards() {
           </div>
         </div>
       </main>
-
-      <style jsx>{`
-        .header { position: sticky; top: 0; width: 100%; height: 32px; display:flex; align-items:center; padding: 20px; background: rgba(10,10,10,0.9); backdrop-filter: blur(6px); }
-        .nav { margin: 0 auto; display: flex; gap: 24px; align-items: center; justify-content: center; }
-        .nav :global(a) { text-decoration: none; font-weight: 600; opacity: 0.85; color: #e6e9ef; padding: 6px 10px; border-radius: 10px; transition: opacity .2s, background .2s, color .2s; }
-        .nav :global(a.active) { opacity: 1; background: rgba(255,255,255,0.25); color: #FFD700; }
-        @media (max-width: 1023px) { .desktop-only { display: none; } }
-      `}</style>
     </>
   );
 }
