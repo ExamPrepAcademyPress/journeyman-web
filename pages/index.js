@@ -19,7 +19,6 @@ export default function Home() {
           </nav>
         </header>
 
-        {/* Contenuto principale centrato orizzontalmente */}
         <section className="content">
           <div className="left">
             <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
@@ -52,6 +51,7 @@ export default function Home() {
                   alt="Dominate The Journeyman Electrician Exam"
                   width={768}
                   height={1001}
+                  style={{ borderRadius: '20px', objectFit: 'contain', width: '100%', height: 'auto' }}
                 />
               </div>
             </Link>
@@ -65,21 +65,32 @@ export default function Home() {
         .nav { margin: 0 auto; display: flex; gap: 24px; align-items: center; justify-content: center; }
         .nav :global(a) { text-decoration: none; font-weight: 600; opacity: 0.85; color: #e6e9ef; padding: 6px 10px; border-radius: 10px; transition: opacity .2s, background .2s, color .2s; }
         .nav :global(a.active) { opacity: 1; background: rgba(255,255,255,0.25); color: #FFD700; }
+
         .content { width: 100%; max-width: 1000px; height: 100%; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; align-items: flex-start; justify-items: center; padding: 20px; border-radius: 20px; background: rgba(255,255,255,0.25); border: 3px solid #FFD700; }
-        .left { text-align: justify; padding-right: 20px; }
+        .left { text-align: justify; padding-right: 10px; }
         .left h2 { margin: 0 0 10px; font-size: clamp(24px, 2.2vw, 36px); color: #FFD700; }
         .left p { margin: 0; font-size: clamp(14px, 1.0vw, 20px); opacity: 0.9; }
-        .cta { margin-top: 20px; line-height: 1.6; }
+        .cta { margin-top: 20px; margin-bottom: 5px; line-height: 1.6; }
         .cta .highlight { margin-top: 10px; font-weight: 600; color: #FFD700; }
-        .right { padding-left: 20px; border-left: 3px solid rgba(255,255,255,0.15); display:flex; align-items:center; }
+        .right { padding-left: 10px; display:flex; align-items:center; }
         .imageLink { display: block; border-radius: 16px; cursor: pointer; }
-        .imageContainer { display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; }
+        .imageContainer { display: flex; justify-content: center; align-items: center; width: 100%; }
         .imageContainer :global(img) { width: 100%; height: auto; object-fit: contain; border-radius: 12px; }
-        @media (max-width: 1023px) {
-          .content { grid-template-columns: 1fr; text-align: center; border: 3px solid #FFD700; }
-          .left { padding-right: 0; }
-          .right { padding-left: 0; border-left: none; margin-top: 15px; }
-          .imageContainer { width: 50vw; }
+
+        /* MOBILE */
+        @media (max-width: 600px) {
+          .content { grid-template-columns: 1fr; text-align: center; }
+          .left { padding: 0; }
+          .right { padding: 0; }
+          .imageContainer { display: flex; justify-content: center; align-items: center; width: 65%; margin: 0 auto; }
+        }
+
+        /* TABLET */
+        @media (max-width: 1023px) and (min-width: 601px) {
+          .content { grid-template-columns: 1fr; text-align: center; }
+          .left { padding: 0; }
+          .right { padding: 0; }
+          .imageContainer { display: flex; justify-content: center; align-items: center; width: 70%; margin: 0 auto; }
         }
       `}</style>
     </ReviewGate>

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 
-const SESSION_KEY = 'review_ack_session_v1'; // change version to force re-ask for everyone
+const SESSION_KEY = 'review_ack_session_v1';
 
 export default function ReviewGate({ children }) {
   const router = useRouter();
@@ -35,7 +35,7 @@ export default function ReviewGate({ children }) {
     if (typeof window !== 'undefined') {
       sessionStorage.setItem(SESSION_KEY, '1');
       setAck(true);
-      router.push('/'); // Porta alla Home
+      router.push('/');
     }
   }
 
@@ -43,21 +43,14 @@ export default function ReviewGate({ children }) {
   if (ack) return children;
 
   return (
-    <main style={{ display: 'flex', justifyContent: 'center', padding: '40px 0' }}>
+    <main style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', padding: '40px 0' }}>
       <section className="content">
-        {/* LEFT: testo e pulsanti */}
         <div className="left">
-          <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Image
-              src="/icon-journey.png"
-              alt="Journey Icon"
-              width={32}
-              height={32}
-              style={{ display: 'inline-block', verticalAlign: 'middle' }}
-            />
+          <h2 style={{ margin: '0 auto', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+            <Image src="/icon-journey.png" alt="Journey Icon" width={32} height={32} />
             Before you start: a quick favor 🙏
           </h2>
-          <p>
+          <p style={{ textAlign: 'justify' }}>
             We’re a small team building resources to help apprentices pass the Journeyman exam.
             Honest reviews are crucial: they help other electricians decide if this book is worth their time,
             and they motivate us to keep improving. If our book helped you even a bit, would you please leave a short, honest review?
@@ -68,7 +61,7 @@ export default function ReviewGate({ children }) {
             <li>If something was unclear, say it: we’ll fix it.</li>
           </ul>
 
-          <div style={{ display: 'flex', gap: 10, flexWrap:'wrap', marginTop:'10px' }}>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginTop: '10px' }}>
             <button
               className="btn"
               onClick={() => {
@@ -84,10 +77,9 @@ export default function ReviewGate({ children }) {
             </button>
           </div>
 
-          {reviewUrl && <div className="muted small">The review page will open in a new tab.</div>}
+          {reviewUrl && <div className="muted small" style={{ textAlign: 'center', marginTop: '5px', marginBottom: '5px' }}>The review page will open in a new tab.</div>}
         </div>
 
-        {/* RIGHT: immagine cliccabile */}
         <div className="right">
           <div className="imageContainer">
             <a
@@ -106,7 +98,7 @@ export default function ReviewGate({ children }) {
                 alt="Leave a Review - Journeyman Exam Prep"
                 width={768}
                 height={1001}
-                style={{ borderRadius: '12px', objectFit: 'contain', width: '100%', height: 'auto', cursor: 'pointer' }}
+                style={{ borderRadius: '20px', objectFit: 'contain', width: '100%', height: 'auto', cursor: 'pointer', display: 'block' }}
               />
             </a>
           </div>
@@ -119,7 +111,7 @@ export default function ReviewGate({ children }) {
           max-width: 1000px;
           display: grid;
           grid-template-columns: 1fr 1fr;
-          align-items: center;
+          align-items: start;
           justify-items: center;
           padding: 20px;
           border-radius: 20px;
@@ -128,26 +120,48 @@ export default function ReviewGate({ children }) {
         }
 
         .left {
-          text-align: justify;
-          padding-right: 20px;
+          text-align: left;
+          padding-right: 10px;
         }
-        .left h2 { color: #FFD700; margin-bottom: 10px; }
-        .left p, .left li { color: #fff; }
+        .left h2 { color: #FFD700; margin-bottom: 10px; font-size: 1.6rem; text-align: center; }
+        .left p, .left li { color: #fff; font-size: 1rem; }
         .muted { color: #c9c9c9; }
 
         .right {
-          padding-left: 20px;
-          border-left: 3px solid rgba(255,255,255,0.15);
+          padding-left: 10px;
           display:flex;
           align-items:center;
         }
-        .imageContainer { display: flex; justify-content: center; align-items: center; width: 100%; }
 
-        @media (max-width: 1023px) {
+        .imageContainer { display: flex; justify-content: center; align-items: center; width: 100%; }
+        .imageContainer :global(img) { width: 100%; height: auto; object-fit: contain; border-radius: 12px; display: block; }
+
+        /* MOBILE */
+        @media (max-width: 600px) {
+          .content {
+            grid-template-columns: 1fr;
+          }
+          .left {
+            padding: 0;
+            order: 1;
+          }
+          .right {
+            padding: 0;
+            order: 2;
+          }
+          .left h2 { font-size: 1.0rem; text-align: center; }
+          .left p, .left li { font-size: 0.8rem; }
+          .imageContainer { display: flex; justify-content: center; align-items: center; width: 65%; margin: 0 auto; }
+        }
+
+        /* TABLET */
+        @media (max-width: 1023px) and (min-width: 601px) {
           .content { grid-template-columns: 1fr; text-align: center; }
-          .left { padding-right: 0; }
-          .right { padding-left: 0; border-left: none; margin-top: 15px; }
-          .imageContainer img { width: 60vw; }
+          .left { padding: 0; }
+          .right { padding: 0; }
+          .left h2 { font-size: 1.8rem; text-align: center; }
+          .left p, .left li { font-size: 0.95rem; }
+          .imageContainer { display: flex; justify-content: center; align-items: center; width: 70%; margin: 0 auto; }
         }
       `}</style>
     </main>

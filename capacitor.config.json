@@ -4,7 +4,7 @@
   "webDir": "out",
   "bundledWebRuntime": false,
   "server": {
-    "url": "https://journeyman-web.vercel.app/",
+    "url": "journeyman-web.vercel.app",
     "cleartext": true
   }
 }
