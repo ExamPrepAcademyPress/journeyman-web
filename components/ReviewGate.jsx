@@ -47,7 +47,16 @@ export default function ReviewGate({ children }) {
       <section className="content">
         {/* LEFT: testo e pulsanti */}
         <div className="left">
-          <h2 style={{ margin: 0 }}>Before you start: a quick favor 🙏</h2>
+          <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Image
+              src="/icon-journey.png"
+              alt="Journey Icon"
+              width={32}
+              height={32}
+              style={{ display: 'inline-block', verticalAlign: 'middle' }}
+            />
+            Before you start: a quick favor 🙏
+          </h2>
           <p>
             We’re a small team building resources to help apprentices pass the Journeyman exam.
             Honest reviews are crucial: they help other electricians decide if this book is worth their time,

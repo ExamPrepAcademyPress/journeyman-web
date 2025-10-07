@@ -22,7 +22,16 @@ export default function Home() {
         {/* Contenuto principale centrato orizzontalmente */}
         <section className="content">
           <div className="left">
-            <h2>Welcome</h2>
+            <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+              <Image
+                src="/icon-journey.png"
+                alt="Journey Icon"
+                width={36}
+                height={36}
+                style={{ display: 'inline-block', verticalAlign: 'middle' }}
+              />
+              Welcome
+            </h2>
             <p>Use the navigation above to start a practice exam or review flashcards.</p>
             <div className="cta">
               <p>If you landed on this page because someone shared the link with you, consider getting your own copy of the book. It’s absolutely essential for anyone who wants to properly prepare and pass the Journeyman Electrician Exam with confidence.</p>
