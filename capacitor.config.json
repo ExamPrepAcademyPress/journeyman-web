@@ -4,7 +4,7 @@
   "webDir": "out",
   "bundledWebRuntime": false,
   "server": {
-    "url": "journeyman-web.vercel.app",
+    "url": "https://journeyman-web.vercel.app/",
     "cleartext": true
   }
 }
@@ -16,5 +16,9 @@
   "bundledWebRuntime": false,
   "android": {
     "icon": "public/icon-journey.png"
+  }
+}
+    "url": "http://192.168.1.165:3000",
+    "cleartext": true
   }
 }
