@@ -8,6 +8,7 @@ const SESSION_KEY = 'review_ack_session_v1';
 
 export default function ReviewGate({ children }) {
   const router = useRouter();
+  const isCookiePage = router.pathname === '/cookie-policy';
   const reviewUrl = process.env.NEXT_PUBLIC_REVIEW_URL;
 
   const [ack, setAck] = useState(false);
@@ -39,8 +40,10 @@ export default function ReviewGate({ children }) {
     }
   }
 
-  if (!ready) return null;
-  if (ack) return children;
+if (!ready) return null;
+
+// ✅ Consenti l'accesso diretto alla cookie-policy
+if (ack || isCookiePage) return children;
 
   return (
     <main style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', padding: '40px 0' }}>
