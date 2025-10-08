@@ -202,7 +202,7 @@ export default function Flashcards() {
         .header { position: sticky; top: 0; width: 100%; height: 32px; display:flex; align-items:center; padding: 20px; background: rgba(10,10,10,0.9); backdrop-filter: blur(6px); }
         .nav { margin: 0 auto; display: flex; gap: 24px; align-items: center; justify-content: center; }
         .nav :global(a) { text-decoration: none; font-weight: 600; opacity: 0.85; color: #e6e9ef; padding: 6px 10px; border-radius: 10px; transition: opacity .2s, background .2s, color .2s; }
-        .nav :global(a.active) { opacity: 1; background: rgba(255,255,255,0.25); color: #FFD700; }
+        .nav :global(a.active) { opacity: 1; background: rgba(255,255,255,0.15); color: #FFD700; }
         @media (max-width: 1023px) { .desktop-only { display: none; } }
       `}</style>
     </>
