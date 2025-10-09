@@ -181,10 +181,6 @@ export default function Flashcards() {
             <button className="btn secondary" onClick={reshuffle}>Shuffle</button>
             <span className="badge" style={{color:'white'}}>{progress}</span>
             <span className="muted small desktop-only">Shortcuts: ←/→, Space=flip, F=flag, R=reshuffle</span>
-
-
-            <span className="badge">{progress}</span>
-            <span className="muted small">Shortcuts: ←/→, Space=flip, F=flag, R=reshuffle</span>
           </div>
 
           {/* stage piena larghezza; la card ha altezza fissa responsive in CSS */}
