@@ -182,7 +182,7 @@ export default function Flashcards() {
             <span className="badge" style={{color:'white'}}>{progress}</span>
             <span className="muted small desktop-only">Shortcuts: ←/→, Space=flip, F=flag, R=reshuffle</span>
           </div>
-          <div>
+
             <span className="badge">{progress}</span>
             <span className="muted small">Shortcuts: ←/→, Space=flip, F=flag, R=reshuffle</span>
           </div>
