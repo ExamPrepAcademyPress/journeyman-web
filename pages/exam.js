@@ -1,4 +1,4 @@
-// /pages/exam.js — versione corretta e unificata
+// /pages/exam.js — versione aggiornata con timer visibile, spiegazioni e X fissa
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -10,7 +10,7 @@ function formatMMSS(sec) {
   return `${m}:${s}`;
 }
 
-function beep(freq = 880, dur = 0.15) {
+function beep(freq = 880, dur = 0.3) {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const osc = ctx.createOscillator();
@@ -19,14 +19,9 @@ function beep(freq = 880, dur = 0.15) {
     gain.connect(ctx.destination);
     osc.type = 'sine';
     osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.01);
+    gain.gain.setValueAtTime(0.05, ctx.currentTime);
     osc.start();
-    setTimeout(() => {
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.01);
-      osc.stop();
-      ctx.close();
-    }, dur * 1000);
+    osc.stop(ctx.currentTime + dur);
   } catch {}
 }
 
@@ -48,11 +43,11 @@ export default function Exam() {
   const [answers, setAnswers] = useState({});
   const [finished, setFinished] = useState(false);
   const [showReview, setShowReview] = useState(false);
+  const [started, setStarted] = useState(false);
   const [useTimer, setUseTimer] = useState(false);
   const [minutes, setMinutes] = useState(120);
   const [remaining, setRemaining] = useState(0);
   const timerRef = useRef(null);
-  const [started, setStarted] = useState(false);
 
   async function start() {
     setFinished(false);
@@ -68,7 +63,8 @@ export default function Exam() {
       return;
     }
 
-    const shuffled = [...data].sort(() => Math.random() - 0.5).slice(0, Math.max(1, Math.min(120, count)));
+    const take = Math.max(1, Math.min(120, count));
+    const shuffled = [...(data || [])].sort(() => Math.random() - 0.5).slice(0, take);
     setQuestions(shuffled);
 
     clearInterval(timerRef.current);
@@ -78,18 +74,18 @@ export default function Exam() {
       timerRef.current = setInterval(() => {
         setRemaining((p) => {
           const n = p - 1;
-          if (n === 60) beep(880, 0.3);
-          if (n === 30) beep(660, 0.3);
+          if (n === 60) beep(880, 0.5);
+          if (n === 30) beep(660, 0.5);
           if (n <= 0) {
             clearInterval(timerRef.current);
-            beep(440, 0.4);
+            beep(440, 1);
             setFinished(true);
             return 0;
           }
           return n;
         });
       }, 1000);
-    } else setRemaining(0);
+    }
   }
 
   useEffect(() => () => clearInterval(timerRef.current), []);
@@ -105,23 +101,7 @@ export default function Exam() {
     }
   }
 
-  function computeScore() {
-    let right = 0;
-    for (const q of questions) {
-      if ((answers[q.id] || '').toUpperCase() === (q.correct_answer || '').toUpperCase()) right++;
-    }
-    const total = questions.length || 0;
-    return { right, total, pct: total ? Math.round((right / total) * 100) : 0 };
-  }
-
   const q = questions[idx];
-  const wrong = questions.filter((q) => (answers[q.id] || '').toUpperCase() !== (q.correct_answer || '').toUpperCase());
-  const timerClass = useMemo(() => {
-    if (!useTimer || remaining <= 0) return 'timer';
-    if (remaining <= 30) return 'timer danger';
-    if (remaining <= 60) return 'timer warn';
-    return 'timer';
-  }, [useTimer, remaining]);
 
   function reset() {
     clearInterval(timerRef.current);
@@ -134,6 +114,10 @@ export default function Exam() {
     setRemaining(0);
   }
 
+  function restart() {
+    if (started) start();
+  }
+
   return (
     <>
       <header className="header">
@@ -144,10 +128,11 @@ export default function Exam() {
         </nav>
       </header>
 
-      <main className="page exam-page">
-        <div className="toolbar card" style={{ flexWrap: 'wrap' }}>
+      <main className="page exam-page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'white' }}>
+        <div className="toolbar card" style={{ flexWrap: 'wrap', justifyContent: 'center', textAlign: 'center', color: 'white' }}>
           <label>Number of questions:</label>
           <input type="number" min="1" max="120" value={count} onChange={(e) => setCount(+e.target.value)} disabled={started} />
+
           <label>
             <input type="checkbox" checked={useTimer} onChange={(e) => setUseTimer(e.target.checked)} disabled={started} /> Enable timer
           </label>
@@ -155,18 +140,31 @@ export default function Exam() {
             Duration (minutes):
             <input type="number" min="1" max="240" value={minutes} onChange={(e) => setMinutes(+e.target.value)} disabled={!useTimer || started} style={{ marginLeft: 8 }} />
           </label>
-          {useTimer && started && <span className={timerClass}>{formatMMSS(remaining)}</span>}
-          {!started ? (
-            <button className="btn" onClick={start}>Start</button>
-          ) : (
-            <button className="btn secondary" onClick={reset}>Reset</button>
+
+          {useTimer && started && (
+            <div className="timer-box">⏱ {formatMMSS(remaining)}</div>
+          )}
+
+          {!started && (<button className="btn main" onClick={start}>Start</button>)}
+
+          {started && !finished && (
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '12px' }}>
+              <button className="btn main" onClick={reset}>Reset</button>
+              <button className="btn main" onClick={restart}>Restart</button>
+            </div>
+          )}
+
+          {finished && (
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginTop: '12px' }}>
+              <button className="btn main" onClick={() => setShowReview(true)}>Review Errors</button>
+              <button className="btn main" onClick={reset}>Reset</button>
+              <button className="btn main" onClick={restart}>Restart</button>
+            </div>
           )}
         </div>
 
-        {!questions.length && <p className="muted">Click <b>Start</b> to generate a test.</p>}
-
         {!!questions.length && !finished && q && (
-          <div className="card exam-card">
+          <div className="card exam-card" style={{ margin: '0 auto', textAlign: 'center', color: 'white' }}>
             <div className="muted">Question {idx + 1} / {questions.length} • {q.topic} → {q.subtopic} {q.nec_ref ? `• NEC ${q.nec_ref}` : ''}</div>
             <h3>{q.question}</h3>
             <div className="options-column">
@@ -179,54 +177,27 @@ export default function Exam() {
                 const cls = picked ? (letter === picked ? (correct ? 'option correct' : 'option wrong') : (correct ? 'option correct' : 'option')) : 'option';
                 return (
                   <div key={letter} className={cls} onClick={() => !disabled && choose(letter)}>
-                    <strong>{letter}.</strong> {text}
+                    <div className="option-text"><strong>{letter}.</strong> {text}</div>
                   </div>
                 );
               })}
-            </div>
-          </div>
-        )}
-
-        {finished && (
-          <div className="card exam-card">
-            <h3>Results</h3>
-            {(() => {
-              const s = computeScore();
-              return <p><b>Score:</b> {s.right}/{s.total} ({s.pct}%)</p>;
-            })()}
-            <div className="toolbar">
-              <button className="btn" onClick={() => setShowReview(true)}>Review errors</button>
-              <button className="btn secondary" onClick={reset}>New test</button>
             </div>
           </div>
         )}
 
         {showReview && (
-          <div className="modal-backdrop">
-            <div className="modal">
-              <button className="close-btn" onClick={() => setShowReview(false)}>×</button>
-              <h3>Review errors</h3>
-              {wrong.length === 0 && <p className="muted">No errors — great job!</p>}
-              {wrong.map((qq, i) => {
-                const picked = (answers[qq.id] || '').toUpperCase();
-                return (
-                  <div key={qq.id} className="row">
-                    <h4>{i + 1}. {qq.question}</h4>
-                    <div className="small muted">Topic: {qq.topic} • {qq.subtopic} {qq.nec_ref ? `• NEC ${qq.nec_ref}` : ''}</div>
-                    <div className="small"><span className="badge">Your</span> {optionText(qq, picked) || '—'}</div>
-                    <div className="small"><span className="badge">Correct</span> {optionText(qq, qq.correct_answer)}</div>
-                    {qq.explanation && (
-                      <div className="small" style={{ marginTop: '6px', whiteSpace: 'pre-wrap' }}>
-                        <span className="badge">Explanation:</span><br />
-                        {qq.explanation}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-              <div className="toolbar" style={{ justifyContent: 'flex-end', marginTop: 12 }}>
-                <button className="btn" onClick={() => setShowReview(false)}>Close</button>
-              </div>
+          <div className="overlay">
+            <div className="review-modal">
+              <div className="close-btn" onClick={() => setShowReview(false)}>✖</div>
+              <h3 style={{ textAlign: 'center' }}>Review Errors</h3>
+              {questions.filter((qq) => (answers[qq.id] || '').toUpperCase() !== (qq.correct_answer || '').toUpperCase()).map((qq, i) => (
+                <div key={qq.id} className="review-item">
+                  <p><b>{i + 1}. {qq.question}</b></p>
+                  <p>Your answer: {optionText(qq, answers[qq.id]) || '—'}</p>
+                  <p>Correct answer: {optionText(qq, qq.correct_answer)}</p>
+                  {qq.explanation && <p className="explanation">Explanation: {qq.explanation}</p>}
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -237,7 +208,17 @@ export default function Exam() {
         .nav { margin: 0 auto; display: flex; gap: 24px; align-items: center; justify-content: center; }
         .nav :global(a) { text-decoration: none; font-weight: 600; opacity: 0.85; color: #e6e9ef; padding: 6px 10px; border-radius: 10px; transition: opacity .2s, background .2s, color .2s; }
         .nav :global(a.active) { opacity: 1; background: rgba(255,255,255,0.15); color: #FFD700; }
-        @media (max-width: 1023px) { .desktop-only { display: none; } }
+        .btn.main { background: #1f6feb; color: white; border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; transition: transform .2s ease, background .2s ease; }
+        .btn.main:hover { transform: scale(1.1); background: #3182f6; }
+        .timer-box { margin-top: 8px; font-weight: bold; color: #FFD700; font-size: 18px; }
+        .options-column { display: flex; flex-direction: column; gap: 10px; }
+        .option { display: flex; align-items: center; background: #1f1f1f; border-radius: 8px; padding: 10px; cursor: pointer; transition: transform .3s ease; }
+        .option:hover { transform: scale(1.03); }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .review-modal { background: #222; color: white; border: 3px solid #FFD700; border-radius: 10px; padding: 24px; width: 80%; max-width: 800px; position: relative; max-height: 80vh; overflow-y: auto; }
+        .close-btn { position: sticky; top: 10px; float: right; background: #FFD700; color: black; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: transform .2s ease; margin-left: auto; }
+        .close-btn:hover { transform: rotate(90deg); }
+        .explanation { color: #ccc; font-style: italic; margin-top: 4px; }
       `}</style>
     </>
   );
