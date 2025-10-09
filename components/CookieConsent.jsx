@@ -1,4 +1,4 @@
-// /components/CookieConsent.jsx
+// /components/CookieConsent.jsx — versione con icona 🍪
 'use client';
 import { useState, useEffect } from 'react';
 
@@ -31,7 +31,7 @@ export default function CookieConsent() {
     return (
       <div className="cookie-reopen">
         <button className="cookie-reopen-btn" onClick={() => setShowSettings(true)}>
-          Cookie Preferences
+          🍪
         </button>
         <style jsx>{`
           .cookie-reopen {
@@ -41,18 +41,20 @@ export default function CookieConsent() {
             z-index: 9998;
           }
           .cookie-reopen-btn {
-            background: transparent;
-            border: 1px solid #FFD700;
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #FFD700;
             color: #FFD700;
-            border-radius: 8px;
-            padding: 6px 12px;
-            font-size: 0.9rem;
+            border-radius: 50%;
+            padding: 10px 12px;
+            font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
           }
           .cookie-reopen-btn:hover {
             background: #FFD700;
             color: black;
+            transform: scale(1.1) rotate(10deg);
           }
         `}</style>
       </div>
@@ -73,12 +75,7 @@ export default function CookieConsent() {
             <div className="cookie-buttons">
               <button onClick={acceptCookies}>Accept</button>
               <button onClick={rejectCookies}>Reject</button>
-              <a
-                href="/cookie-policy"
-                className="details"
-                rel="noopener noreferrer"
-                onClick={() => setVisible(false)}
-              >
+              <a href="/cookie-policy" className="details" rel="noopener noreferrer" onClick={() => setVisible(false)}>
                 Learn more
               </a>
             </div>
@@ -169,14 +166,8 @@ export default function CookieConsent() {
           text-align: center;
         }
         @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </>

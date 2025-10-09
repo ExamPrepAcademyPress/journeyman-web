@@ -1,5 +1,5 @@
-// /pages/exam.js — versione aggiornata con timer visibile, spiegazioni e X fissa
-import { useEffect, useMemo, useRef, useState } from 'react';
+// /pages/exam.js — aggiunto testo bianco accanto alle risposte colorate
+import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '../lib/supabaseClient';
@@ -23,14 +23,6 @@ function beep(freq = 880, dur = 0.3) {
     osc.start();
     osc.stop(ctx.currentTime + dur);
   } catch {}
-}
-
-function optionText(q, letter) {
-  const L = (letter || '').toUpperCase();
-  if (!L) return '';
-  const key = `option_${L.toLowerCase()}`;
-  const t = q?.[key] || '';
-  return `${L}${t ? ` — ${t}` : ''}`;
 }
 
 export default function Exam() {
@@ -102,6 +94,9 @@ export default function Exam() {
   }
 
   const q = questions[idx];
+  const incorrectCount = questions.filter(
+    (qq) => (answers[qq.id] || '').toUpperCase() !== (qq.correct_answer || '').toUpperCase()
+  ).length;
 
   function reset() {
     clearInterval(timerRef.current);
@@ -156,7 +151,9 @@ export default function Exam() {
 
           {finished && (
             <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginTop: '12px' }}>
-              <button className="btn main" onClick={() => setShowReview(true)}>Review Errors</button>
+              <button className="btn main" onClick={() => setShowReview(true)}>
+                Review Errors ({incorrectCount}/{questions.length})
+              </button>
               <button className="btn main" onClick={reset}>Reset</button>
               <button className="btn main" onClick={restart}>Restart</button>
             </div>
@@ -165,7 +162,7 @@ export default function Exam() {
 
         {!!questions.length && !finished && q && (
           <div className="card exam-card" style={{ margin: '0 auto', textAlign: 'center', color: 'white' }}>
-            <div className="muted">Question {idx + 1} / {questions.length} • {q.topic} → {q.subtopic} {q.nec_ref ? `• NEC ${q.nec_ref}` : ''}</div>
+            <div className="category">Question {idx + 1} / {questions.length} • {q.topic} → {q.subtopic} {q.nec_ref ? `• NEC ${q.nec_ref}` : ''}</div>
             <h3>{q.question}</h3>
             <div className="options-column">
               {['A', 'B', 'C', 'D'].map((letter) => {
@@ -189,13 +186,20 @@ export default function Exam() {
           <div className="overlay">
             <div className="review-modal">
               <div className="close-btn" onClick={() => setShowReview(false)}>✖</div>
-              <h3 style={{ textAlign: 'center' }}>Review Errors</h3>
+              <h3 style={{ textAlign: 'center', color: '#FFD700' }}>Review Errors</h3>
               {questions.filter((qq) => (answers[qq.id] || '').toUpperCase() !== (qq.correct_answer || '').toUpperCase()).map((qq, i) => (
                 <div key={qq.id} className="review-item">
                   <p><b>{i + 1}. {qq.question}</b></p>
-                  <p>Your answer: {optionText(qq, answers[qq.id]) || '—'}</p>
-                  <p>Correct answer: {optionText(qq, qq.correct_answer)}</p>
-                  {qq.explanation && <p className="explanation">Explanation: {qq.explanation}</p>}
+                  <p>
+                    Your answer: <span className={(answers[qq.id] || '').toUpperCase() === (qq.correct_answer || '').toUpperCase() ? 'green' : 'red'}>
+                      {answers[qq.id] || '—'}
+                    </span> <span className="white"> — {qq[`option_${(answers[qq.id] || '').toLowerCase()}`] || ''}</span>
+                  </p>
+                  <p>
+                    Correct answer: <span className="green">{qq.correct_answer}</span>
+                    <span className="white"> — {qq[`option_${qq.correct_answer?.toLowerCase()}`] || ''}</span>
+                  </p>
+                  {qq.explanation && <p className="explanation">{qq.explanation}</p>}
                 </div>
               ))}
             </div>
@@ -211,6 +215,7 @@ export default function Exam() {
         .btn.main { background: #1f6feb; color: white; border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; transition: transform .2s ease, background .2s ease; }
         .btn.main:hover { transform: scale(1.1); background: #3182f6; }
         .timer-box { margin-top: 8px; font-weight: bold; color: #FFD700; font-size: 18px; }
+        .category { color: #FFD700; font-weight: 600; margin-bottom: 8px; }
         .options-column { display: flex; flex-direction: column; gap: 10px; }
         .option { display: flex; align-items: center; background: #1f1f1f; border-radius: 8px; padding: 10px; cursor: pointer; transition: transform .3s ease; }
         .option:hover { transform: scale(1.03); }
@@ -218,7 +223,10 @@ export default function Exam() {
         .review-modal { background: #222; color: white; border: 3px solid #FFD700; border-radius: 10px; padding: 24px; width: 80%; max-width: 800px; position: relative; max-height: 80vh; overflow-y: auto; }
         .close-btn { position: sticky; top: 10px; float: right; background: #FFD700; color: black; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: transform .2s ease; margin-left: auto; }
         .close-btn:hover { transform: rotate(90deg); }
-        .explanation { color: #ccc; font-style: italic; margin-top: 4px; }
+        .explanation { color: #FFD700; font-style: italic; margin-top: 4px; }
+        .red { color: #ff4444; font-weight: bold; }
+        .green { color: #4caf50; font-weight: bold; }
+        .white { color: #fff; }
       `}</style>
     </>
   );
