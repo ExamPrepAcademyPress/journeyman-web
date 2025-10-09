@@ -1,9 +1,8 @@
-// Import dei moduli React, funzioni di navigazione Next.js e connessione Supabase
+// /pages/flashcards.js
+// Correzione tag <label> non chiuso e duplicazioni
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-// /pages/flashcards.js — scroll interno + interlinea ridotta
-import { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
 function useKeyboardShortcuts(handlers) {
@@ -33,10 +32,6 @@ function shuffleArray(arr) {
 }
 
 const PASTELS = ['#FFD166','#FFADAD','#FDFFB6','#BDE0FE','#A0E7E5','#B9FBC0','#BDB2FF','#FFC6FF','#F4A261','#A7C957'];
-const PASTELS = [
-  '#FFD166','#FFADAD','#FDFFB6','#BDE0FE','#A0E7E5',
-  '#B9FBC0','#BDB2FF','#FFC6FF','#F4A261','#A7C957'
-];
 
 function pickDifferentColor(prev) {
   const pool = PASTELS.filter(c => c !== prev);
@@ -57,14 +52,6 @@ export default function Flashcards() {
   const [flagged, setFlagged] = useState(new Set());
   const [animClass, setAnimClass] = useState('anim-in-right');
   const animTimer = useRef(null);
-
-  const [idx, setIdx] = useState(0);
-  const [flipped, setFlipped] = useState(false);
-  const [flagged, setFlagged] = useState(new Set());
-
-  const [animClass, setAnimClass] = useState('anim-in-right');
-  const animTimer = useRef(null);
-
   const [cardColor, setCardColor] = useState(PASTELS[0]);
   const lastColorRef = useRef(null);
 
@@ -153,13 +140,6 @@ export default function Flashcards() {
 
       <main>
         <div className="card" style={{display:'grid', gap:12, margin:'0 auto'}}>
-      <header>
-        <a href="/">Home</a>
-        <a href="/exam">Exam</a>
-        <strong>Flashcards</strong>
-      </header>
-      <main>
-        <div className="card" style={{display:'grid', gap:12}}>
           <div style={{display:'flex', gap:12, flexWrap:'wrap', alignItems:'center', width:'100%'}}>
             <input
               placeholder="Search front/back..."
@@ -167,14 +147,9 @@ export default function Flashcards() {
               onChange={e=>setFilter(e.target.value)}
               style={{minWidth:260, flex:'1 1 280px'}}
             />
-            <label style={{color:'white'}}>Size
-              <input type="number" min="1" max="500" value={limit} onChange={e=>setLimit(+e.target.value)} style={{marginLeft:8, width:90}} />
-            </label>
+            <label style={{color:'white'}} htmlFor="limitInput">Size</label>
+            <input id="limitInput" type="number" min="1" max="500" value={limit} onChange={e=>setLimit(+e.target.value)} style={{marginLeft:8, width:90}} />
             <label style={{color:'white'}}>
-            <label>Size
-              <input type="number" min="1" max="500" value={limit} onChange={e=>setLimit(+e.target.value)} style={{marginLeft:8, width:90}} />
-            </label>
-            <label>
               <input type="checkbox" checked={onlyFlagged} onChange={e=>setOnlyFlagged(e.target.checked)} />
               {' '}Flagged only
             </label>
@@ -182,12 +157,7 @@ export default function Flashcards() {
             <span className="badge" style={{color:'white'}}>{progress}</span>
             <span className="muted small desktop-only">Shortcuts: ←/→, Space=flip, F=flag, R=reshuffle</span>
           </div>
-          <div>
-            <span className="badge">{progress}</span>
-            <span className="muted small">Shortcuts: ←/→, Space=flip, F=flag, R=reshuffle</span>
-          </div>
 
-          {/* stage piena larghezza; la card ha altezza fissa responsive in CSS */}
           <div className="flashcard-stage" style={{ maxWidth:'100%' }}>
             <div className={`color-frame ${animClass}`}>
               <div className="flip-card">
@@ -235,9 +205,6 @@ export default function Flashcards() {
         .nav :global(a.active) { opacity: 1; background: rgba(255,255,255,0.15); color: #FFD700; }
         @media (max-width: 1023px) { .desktop-only { display: none; } }
       `}</style>
-    </>
-  );
-}
     </>
   );
 }
