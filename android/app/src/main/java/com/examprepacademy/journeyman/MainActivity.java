@@ -1,4 +1,4 @@
-package com.journeyman.exam;
+package com.examprepacademy.journeyman;
 
 import com.getcapacitor.BridgeActivity;
 

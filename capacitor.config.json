@@ -1,24 +1,12 @@
 {
-  "appId": "com.journeyman.exam",
-  "appName": "Journeyman Exam Prep",
-  "webDir": "out",
-  "bundledWebRuntime": false,
-  "server": {
-    "url": "https://journeyman-web.vercel.app/",
-    "cleartext": true
-  }
-}
-
-{
   "appId": "com.examprepacademy.journeyman",
   "appName": "Journeyman Exam Prep",
   "webDir": "out",
-  "bundledWebRuntime": false,
-  "android": {
-    "icon": "public/icon-journey.png"
-  }
-}
-    "url": "http://192.168.1.165:3000",
+  "server": {
+    "url": "https://journeyman-web.vercel.app",
     "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true
   }
 }

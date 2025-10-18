@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.journeyman.exam",
+  "applicationId": "com.examprepacademy.journeyman",
   "variantName": "release",
   "elements": [
     {
