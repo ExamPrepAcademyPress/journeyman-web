@@ -6,18 +6,13 @@ import Image from 'next/image';
 
 const SESSION_KEY = 'review_ack_session_v1';
 
-// ⚠️ METTI QUI IL TUO LINK DIRETTO
-// Esempio pagina "scrivi una recensione":
-//   https://www.amazon.com/review/create-review?asin=ASIN_DEL_LIBRO&channel=glance-detail
-// Esempio pagina "tutte le recensioni":
-//   https://www.amazon.com/product-reviews/ASIN_DEL_LIBRO/?reviewerType=all_reviews
-const reviewUrl = 'https://www.amazon.com/review/create-review/ref=cm_cr_othr_d_wr_but_top?ie=UTF8&channel=glance-detail&asin=B0FX128SM4';
-
 export default function ReviewGate({ children }) {
   const router = useRouter();
+  const reviewUrl = process.env.NEXT_PUBLIC_REVIEW_URL;
   const [ack, setAck] = useState(false);
   const [ready, setReady] = useState(false);
   const isCookiePage = router.pathname === '/cookie-policy';
+
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -45,10 +40,11 @@ export default function ReviewGate({ children }) {
     }
   }
 
-  if (!ready) return null;
+if (!ready) return null;
 
-  // ✅ Accesso libero alla cookie-policy anche senza ack
-  if (ack || isCookiePage) return children;
+// ✅ Accesso libero alla cookie-policy anche senza ack
+if (ack || isCookiePage) return children;
+
 
   return (
     <main style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', padding: '40px 0' }}>
@@ -72,7 +68,10 @@ export default function ReviewGate({ children }) {
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginTop: '10px' }}>
             <button
               className="btn"
-              onClick={() => window.open(reviewUrl, '_blank', 'noopener,noreferrer')}
+              onClick={() => {
+                if (reviewUrl) window.open(reviewUrl, '_blank', 'noopener,noreferrer');
+                else alert('Set NEXT_PUBLIC_REVIEW_URL in .env.local to open the review page.');
+              }}
             >
               Leave a review now
             </button>
@@ -82,14 +81,22 @@ export default function ReviewGate({ children }) {
             </button>
           </div>
 
-          <div className="muted small" style={{ textAlign: 'center', marginTop: '5px', marginBottom: '5px' }}>
-            The review page will open in a new tab.
-          </div>
+          {reviewUrl && <div className="muted small" style={{ textAlign: 'center', marginTop: '5px', marginBottom: '5px' }}>The review page will open in a new tab.</div>}
         </div>
 
         <div className="right">
           <div className="imageContainer">
-            <a href={reviewUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              href={reviewUrl || '#'}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => {
+                if (!reviewUrl) {
+                  e.preventDefault();
+                  alert('Set NEXT_PUBLIC_REVIEW_URL in .env.local to open the review page.');
+                }
+              }}
+            >
               <Image
                 src="/img/COVER_REV.jpg"
                 alt="Leave a Review - Journeyman Exam Prep"
@@ -115,28 +122,50 @@ export default function ReviewGate({ children }) {
           background: rgba(255,255,255,0.25);
           border: 3px solid #FFD700;
         }
-        .left { text-align: left; padding-right: 10px; }
+
+        .left {
+          text-align: left;
+          padding-right: 10px;
+        }
         .left h2 { color: #FFD700; margin-bottom: 10px; font-size: 1.6rem; text-align: center; }
         .left p, .left li { color: #fff; font-size: 1rem; }
         .muted { color: #c9c9c9; }
-        .right { padding-left: 10px; display:flex; align-items:center; }
+
+        .right {
+          padding-left: 10px;
+          display:flex;
+          align-items:center;
+        }
+
         .imageContainer { display: flex; justify-content: center; align-items: center; width: 100%; }
         .imageContainer :global(img) { width: 100%; height: auto; object-fit: contain; border-radius: 12px; display: block; }
+
+        /* MOBILE */
         @media (max-width: 600px) {
-          .content { grid-template-columns: 1fr; }
-          .left { padding: 0; order: 1; }
-          .right { padding: 0; order: 2; }
+          .content {
+            grid-template-columns: 1fr;
+          }
+          .left {
+            padding: 0;
+            order: 1;
+          }
+          .right {
+            padding: 0;
+            order: 2;
+          }
           .left h2 { font-size: 1.0rem; text-align: center; }
           .left p, .left li { font-size: 0.8rem; }
-          .imageContainer { width: 65%; margin: 0 auto; }
+          .imageContainer { display: flex; justify-content: center; align-items: center; width: 65%; margin: 0 auto; }
         }
+
+        /* TABLET */
         @media (max-width: 1023px) and (min-width: 601px) {
           .content { grid-template-columns: 1fr; text-align: center; }
           .left { padding: 0; }
           .right { padding: 0; }
           .left h2 { font-size: 1.8rem; text-align: center; }
           .left p, .left li { font-size: 0.95rem; }
-          .imageContainer { width: 70%; margin: 0 auto; }
+          .imageContainer { display: flex; justify-content: center; align-items: center; width: 70%; margin: 0 auto; }
         }
       `}</style>
     </main>
