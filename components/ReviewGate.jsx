@@ -8,7 +8,7 @@ const SESSION_KEY = 'review_ack_session_v1';
 
 export default function ReviewGate({ children }) {
   const router = useRouter();
-  const reviewUrl = process.env.NEXT_PUBLIC_REVIEW_URL;
+  const reviewUrl = 'https://www.amazon.com/review/create-review/ref=cm_cr_othr_d_wr_but_top?ie=UTF8&channel=glance-detail&asin=B0FX128SM4';
   const [ack, setAck] = useState(false);
   const [ready, setReady] = useState(false);
   const isCookiePage = router.pathname === '/cookie-policy';
