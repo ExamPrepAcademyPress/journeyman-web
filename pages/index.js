@@ -39,7 +39,7 @@ export default function Home() {
         <div className="right">
           <Link
             className="imageLink"
-            href="https://www.amazon.com/Pink-Salt-Solution-Weight-Loss/dp/B0FFB8L1XS"
+            href="https://www.amazon.com/review/create-review/ref=cm_cr_othr_d_wr_but_top?ie=UTF8&channel=glance-detail&asin=B0FX128SM4"
             target="_blank"
             rel="noopener noreferrer"
           >
